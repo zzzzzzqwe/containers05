@@ -33,3 +33,45 @@ RUN apt-get update && \
 ```
 
 ![image](screenshots/Screenshot_2.png)
+
+4. Создаю образ контейнера с именем `apache2-php-mariadb`
+
+Открываю терминал в папке `containers05` и ввожу команду для создания образа:
+
+```bash
+docker build -t apache2-php-mariadb .
+```
+
+![image](screenshots/Screenshot_4.png)
+
+5. Создаю контейнер `apache2-php-mariadb` из образа `apache2-php-mariadb` и запусткаю его в фоновом режиме с командой запуска bash.
+
+```bash
+docker run -d --name apache2-php-mariadb apache2-php-mariadb bash
+```
+
+- `-d` - флаг для запуска в фоновом режиме
+
+![image](screenshots/Screenshot_3.png)
+
+6. Копирую из контейнера файлы конфигурации apache2, php, mariadb в папку files/ на компьютере. Выполняю команды:
+
+```bash
+docker cp apache2-php-mariadb:/etc/apache2/sites-available/000-default.conf files/apache2/
+docker cp apache2-php-mariadb:/etc/apache2/apache2.conf files/apache2/
+docker cp apache2-php-mariadb:/etc/php/8.2/apache2/php.ini files/php/
+docker cp apache2-php-mariadb:/etc/mysql/mariadb.conf.d/50-server.cnf files/mariadb/
+```
+
+![image](screenshots/Screenshot_5.png)
+
+После выполнения команд в папке проекта появились файлы конфигурации.
+
+7. Останавливаю и удаляю контейнер `apache2-php-mariadb` командами:
+
+```bash
+docker stop apache2-php-mariadb
+docker rm apache2-php-mariadb
+```
+
+![image](screenshots/Screenshot_6.png)
