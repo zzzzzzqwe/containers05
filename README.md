@@ -156,7 +156,7 @@ VOLUME /var/log
 В инструкции `RUN` ... добавляю установку пакета `supervisor`.
 
 ```dockerfile
-supervisor \
+apt-get install -y apache2 php libapache2-mod-php php-mysql mariadb-server supervisor && \
 ```
 
 После инструкции `RUN` ... добавляю копирование и распаковку сайта WordPress:
@@ -196,7 +196,7 @@ EXPOSE 80
 CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
 ```
 
-После всех манипуляций `Dockerfile` выгляди так:
+После всех манипуляций `Dockerfile` выглядит так:
 
 ```dockerfile
 # create from debian image
