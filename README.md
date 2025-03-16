@@ -109,3 +109,129 @@ DirectoryIndex index.php index.html
 
 ![image](screenshots/Screenshot_9.png)
 
+## Создание скрипта запуска
+
+1. Создаю в папке `files` папку `supervisor` и файл `supervisord.conf` со следующим содержимым:
+
+```bash
+[supervisord]
+nodaemon=true
+logfile=/dev/null
+user=root
+
+# apache2
+[program:apache2]
+command=/usr/sbin/apache2ctl -D FOREGROUND
+autostart=true
+autorestart=true
+startretries=3
+stderr_logfile=/proc/self/fd/2
+user=root
+
+# mariadb
+[program:mariadb]
+command=/usr/sbin/mariadbd --user=mysql
+autostart=true
+autorestart=true
+startretries=3
+stderr_logfile=/proc/self/fd/2
+user=mysql
+```
+
+![image](screenshots/Screenshot_10.png)
+
+## Создание Dockerfile
+
+1. Открываю файл `Dockerfile` и добавляю в него следующие строки:
+После инструкции `FROM` ... добавляю монтирование томов:
+
+```dockerfile
+# mount volume for mysql data
+VOLUME /var/lib/mysql
+
+# mount volume for logs
+VOLUME /var/log
+```
+
+В инструкции `RUN` ... добавляю установку пакета `supervisor`.
+
+```dockerfile
+supervisor \
+```
+
+После инструкции `RUN` ... добавляю копирование и распаковку сайта WordPress:
+```dockerfile
+# add wordpress files to /var/www/html
+ADD https://wordpress.org/latest.tar.gz /var/www/html/
+```
+
+После копирования файлов `WordPress` добавляю копирование конфигурационных файлов `apache2`, `php`, `mariadb`, а также скрипта запуска:
+
+```dockerfile
+# copy the configuration file for apache2 from files/ directory
+COPY files/apache2/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY files/apache2/apache2.conf /etc/apache2/apache2.conf
+
+# copy the configuration file for php from files/ directory
+COPY files/php/php.ini /etc/php/8.2/apache2/php.ini
+
+# copy the configuration file for mysql from files/ directory
+COPY files/mariadb/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
+
+# copy the supervisor configuration file
+COPY files/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
+```
+
+Для функционирования `mariadb` создаю папку `/var/run/mysqld` и устанавливаю права на неё:
+
+```dockerfile
+RUN mkdir /var/run/mysqld && chown mysql:mysql /var/run/mysqld
+```
+
+Открываю порт 80, добавляю команду запуска `supervisord`:
+
+```dockerfile
+EXPOSE 80
+# start supervisor
+CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
+```
+
+После всех манипуляций `Dockerfile` выгляди так:
+
+```dockerfile
+# create from debian image
+FROM debian:latest
+# mount volume for mysql data
+VOLUME /var/lib/mysql
+
+# mount volume for logs
+VOLUME /var/log
+
+# install apache2, php, mod_php for apache2, php-mysql and mariadb
+RUN apt-get update && \
+    apt-get install -y apache2 php libapache2-mod-php php-mysql mariadb-server supervisor && \
+    apt-get clean
+
+RUN mkdir /var/run/mysqld && chown mysql:mysql /var/run/mysqld
+
+# add wordpress files to /var/www/html
+ADD https://wordpress.org/latest.tar.gz /var/www/html/
+
+# copy the configuration file for apache2 from files/ directory
+COPY files/apache2/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY files/apache2/apache2.conf /etc/apache2/apache2.conf
+
+# copy the configuration file for php from files/ directory
+COPY files/php/php.ini /etc/php/8.2/apache2/php.ini
+
+# copy the configuration file for mysql from files/ directory
+COPY files/mariadb/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
+
+# copy the supervisor configuration file
+COPY files/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
+
+# start supervisor
+CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
+
+EXPOSE 80
+```
