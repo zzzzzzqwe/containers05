@@ -102,3 +102,10 @@ DirectoryIndex index.php index.html
 - upload_max_filesize = 128M
 - post_max_size = 128M
 - max_execution_time = 120
+
+2. Конфигурационный файл `mariadb`:
+
+Открываю файл `files/mariadb/50-server.cnf`, нахожу строку `#log_error = /var/log/mysql/error.log` и раскомментирую её.
+
+![image](screenshots/Screenshot_9.png)
+
