@@ -79,3 +79,26 @@ docker rm apache2-php-mariadb
 
 
 ## Настройка конфигурационных файлов
+
+1. Конфигурационный файл `apache2`:
+
+Открываю файл `files/apache2/000-default.conf`, нахожу строку `#ServerName www.example.com` и заменяю её на `ServerName localhost`. Также в строке `ServerAdmin webmaster@localhost` добавляю свою почту и после строки `DocumentRoot /var/www/html` добавляю следующие строки:
+
+```bash
+DirectoryIndex index.php index.html
+```
+
+![image](screenshots/Screenshot_7.png)
+
+2. Конфигурационный файл `php`:
+
+Открываю файл `files/php/php.ini`, нахожу строку `;error_log = php_errors.log` и заменяю её на `error_log = /var/log/php_errors.log`. 
+
+![image](screenshots/Screenshot_8.png)
+
+Также настраиваю параметры `memory_limit`, `upload_max_filesize`, `post_max_size` и `max_execution_time` следующим образом:
+
+- memory_limit = 128M
+- upload_max_filesize = 128M
+- post_max_size = 128M
+- max_execution_time = 120
