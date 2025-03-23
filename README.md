@@ -328,7 +328,17 @@ docker run -d -p 80:80 --name apache2-php-mariadb apache2-php-mariadb
 
 ![image](screenshots/Screenshot_20.png)
 
-Еще раз настраиваю бд в контейнере, проблема исправлена:
+Еще раз настраиваю бд в контейнере:
+
+```sql
+CREATE DATABASE wordpress;
+CREATE USER 'wordpress'@'localhost' IDENTIFIED BY 'wordpress';
+GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+Проблема исправлена:
 
 ![image](screenshots/Screenshot_21.png)
 
