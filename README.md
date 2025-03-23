@@ -281,7 +281,7 @@ tar -xzf latest.tar.gz --strip-components=1
 
 Теперь архив распакован:
 
-![image](screenshots/Screenshot_14.png)
+![image](screenshots/Screenshot_15.png)
 
 Перезапускаю контейнер и проверяю снова:
 
@@ -291,4 +291,18 @@ docker restart apache2-php-mariadb
 
 Теперь работает, вижу страницу `wordpress`:
 
-![image](screenshots/Screenshot_15.png)
+![image](screenshots/Screenshot_16.png)
+
+Указываю параметры подключения к бд:
+
+- имя базы данных: `wordpress`;
+- имя пользователя: `wordpress`;
+- пароль: `wordpress`;
+- адрес сервера базы данных: `localhost`;
+- префикс таблиц: `wp_`.
+
+![image](screenshots/Screenshot_17.png)
+
+Копирую файл конфигурации в `files/wp-config.php` на компьютере.
+
+![image](screenshots/Screenshot_19.png)
