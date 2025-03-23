@@ -306,3 +306,9 @@ docker restart apache2-php-mariadb
 Копирую файл конфигурации в `files/wp-config.php` на компьютере.
 
 ![image](screenshots/Screenshot_19.png)
+
+Также добавляю следующую строку в `Dockerfile`:
+```dockerfile
+# copy the configuration file for wordpress from files/ directory
+COPY files/wp-config.php /var/www/html/wordpress/wp-config.php
+```

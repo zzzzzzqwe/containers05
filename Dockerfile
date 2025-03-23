@@ -21,6 +21,9 @@ ADD https://wordpress.org/latest.tar.gz /var/www/html/
 COPY files/apache2/000-default.conf /etc/apache2/sites-available/000-default.conf
 COPY files/apache2/apache2.conf /etc/apache2/apache2.conf
 
+# copy the configuration file for wordpress from files/ directory
+COPY files/wp-config.php /var/www/html/wordpress/wp-config.php
+
 # copy the configuration file for php from files/ directory
 COPY files/php/php.ini /etc/php/8.2/apache2/php.ini
 
