@@ -239,3 +239,32 @@ EXPOSE 80
 Проверяю наличие сайта WordPress в папке `/var/www/html/`, вижу установленный файл:
 
 ![image](screenshots/Screenshot_12.png)
+
+Проверяю изменения конфигурационного файла `apache2` c помощью:
+
+```bash
+docker exec -it apache2-php-mariadb bash
+cat /etc/apache2/sites-available/000-default.conf
+```
+
+Вижу что файл изменился:
+
+![image](screenshots/Screenshot_13.png)
+
+## Создание базы данных и пользователя
+Создаю базу данных `wordpress` и пользователя `wordpress` с паролем `wordpress` в контейнере `apache2-php-mariadb`. Для этого, в контейнере `apache2-php-mariadb`, выполнияю команды:
+
+```bash
+docker exec -it apache2-php-mariadb bash
+mysql
+```
+
+```sql
+CREATE DATABASE wordpress;
+CREATE USER 'wordpress'@'localhost' IDENTIFIED BY 'wordpress';
+GRANT ALL PRIVILEGES ON wordpress.* TO 'wordpress'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+![image](screenshots/Screenshot_14.png)
