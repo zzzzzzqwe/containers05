@@ -235,3 +235,7 @@ CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
 
 EXPOSE 80
 ```
+
+Проверяю наличие сайта WordPress в папке `/var/www/html/`, вижу установленный файл:
+
+![image](screenshots/Screenshot_12.png)
