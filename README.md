@@ -252,7 +252,7 @@ cat /etc/apache2/sites-available/000-default.conf
 ![image](screenshots/Screenshot_13.png)
 
 ## Создание базы данных и пользователя
-Создаю базу данных `wordpress` и пользователя `wordpress` с паролем `wordpress` в контейнере `apache2-php-mariadb`. Для этого, в контейнере `apache2-php-mariadb`, выполнияю команды:
+Создаю базу данных `wordpress` и пользователя `wordpress` с паролем `wordpress` в контейнере `apache2-php-mariadb`. Для этого, в контейнере `apache2-php-mariadb`, выполняю команды:
 
 ```bash
 docker exec -it apache2-php-mariadb bash
@@ -268,3 +268,27 @@ EXIT;
 ```
 
 ![image](screenshots/Screenshot_14.png)
+
+## Создание файла конфигурации WordPress
+
+Открываю в браузере `localhost` и вижу что сайт не работает. Скорее всего проблема в том, что архив Wordpress был скачан, но не был распакован. Пробую распаковать выполняя команды:
+
+```bash
+docker exec -it apache2-php-mariadb bash
+cd /var/www/html
+tar -xzf latest.tar.gz --strip-components=1
+```
+
+Теперь архив распакован:
+
+![image](screenshots/Screenshot_14.png)
+
+Перезапускаю контейнер и проверяю снова:
+
+```bash
+docker restart apache2-php-mariadb
+```
+
+Теперь работает, вижу страницу `wordpress`:
+
+![image](screenshots/Screenshot_15.png)
