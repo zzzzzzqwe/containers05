@@ -310,5 +310,28 @@ docker restart apache2-php-mariadb
 Также добавляю следующую строку в `Dockerfile`:
 ```dockerfile
 # copy the configuration file for wordpress from files/ directory
-COPY files/wp-config.php /var/www/html/wordpress/wp-config.php
+COPY files/wp-config.php /var/www/html/wp-config.php
 ```
+
+## Запуск и тестирование
+
+Пересобираю образ контейнера с именем `apache2-php-mariadb` и запускаю контейнер `apache2-php-mariadb` из образа `apache2-php-mariadb`. Проверяю работоспособность сайта `WordPress`.
+
+```bash
+docker stop apache2-php-mariadb
+docker rm apache2-php-mariadb
+docker build -t apache2-php-mariadb .
+docker run -d -p 80:80 --name apache2-php-mariadb apache2-php-mariadb
+```
+
+На сайте `wordpress` вижу ошибку связи с бд:
+
+![image](screenshots/Screenshot_20.png)
+
+Еще раз настраиваю бд в контейнере, проблема исправлена:
+
+![image](screenshots/Screenshot_21.png)
+
+Сайт работает.
+
+

@@ -22,7 +22,7 @@ COPY files/apache2/000-default.conf /etc/apache2/sites-available/000-default.con
 COPY files/apache2/apache2.conf /etc/apache2/apache2.conf
 
 # copy the configuration file for wordpress from files/ directory
-COPY files/wp-config.php /var/www/html/wordpress/wp-config.php
+COPY files/wp-config.php /var/www/html/wp-config.php
 
 # copy the configuration file for php from files/ directory
 COPY files/php/php.ini /etc/php/8.2/apache2/php.ini
@@ -37,5 +37,5 @@ COPY files/supervisor/supervisord.conf /etc/supervisor/supervisord.conf
 CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisor/supervisord.conf"]
 
 EXPOSE 80
-
-
+# распаковка архива wordpress
+RUN tar -xzf /var/www/html/latest.tar.gz -C /var/www/html --strip-components=1
